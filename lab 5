@@ -1,0 +1,180 @@
+import java.util.Scanner;
+
+
+class Account {
+    protected String customerName;
+    protected int accountNumber;
+    protected String accountType;
+    protected double balance;
+
+   
+    public Account(String customerName, int accountNumber, String accountType, double balance) {
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.balance = balance;
+    }
+
+
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposit Successful. New Balance: " + balance);
+    }
+
+
+    public void displayBalance() {
+        System.out.println("Current Balance: " + balance);
+    }
+
+ 
+    public void withdraw(double amount) {
+        balance -= amount;
+        System.out.println("Withdrawal Successful. New Balance: " + balance);
+    }
+}
+
+
+class CurAcct extends Account {
+    private static final double MIN_BALANCE = 1000;
+    private static final double PENALTY = 50;
+
+
+    public CurAcct(String customerName, int accountNumber, double balance) {
+        super(customerName, accountNumber, "Current", balance);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (balance - amount < MIN_BALANCE) {
+            System.out.println("Insufficient balance. Minimum balance of " + MIN_BALANCE + " must be maintained.");
+        } else {
+            super.withdraw(amount);
+            if (balance < MIN_BALANCE) {
+                balance -= PENALTY;
+                System.out.println("Minimum balance breached. Penalty of " + PENALTY + " imposed. New Balance: " + balance);
+            }
+        }
+    }
+
+
+    public void issueChequeBook() {
+        System.out.println("Cheque Book Issued.");
+    }
+}
+
+class SavAcct extends Account {
+    private static final double INTEREST_RATE = 0.05; // 5% compound interest
+    private static final int COMPOUND_FREQUENCY = 1; // yearly compound interest
+
+    // Constructor for Savings Account
+    public SavAcct(String customerName, int accountNumber, double balance) {
+        super(customerName, accountNumber, "Savings", balance);
+    }
+
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            super.withdraw(amount);
+        } else {
+            System.out.println("Insufficient funds for withdrawal.");
+        }
+    }
+
+    public void computeAndDepositInterest() {
+        double interest = balance * Math.pow((1 + INTEREST_RATE), COMPOUND_FREQUENCY) - balance;
+        balance += interest;
+        System.out.println("Interest of " + interest + " computed and added to your balance. New Balance: " + balance);
+    }
+}
+
+public class amb {
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static Account createAccount() {
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter account number: ");
+        int accountNumber = scanner.nextInt();
+        System.out.print("Enter initial balance: ");
+        double balance = scanner.nextDouble();
+        scanner.nextLine(); // consume newline character
+
+        System.out.println("Select Account Type (1 for Current, 2 for Savings): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // consume newline character
+
+        if (choice == 1) {
+            return new CurAcct(customerName, accountNumber, balance);
+        } else if (choice == 2) {
+            return new SavAcct(customerName, accountNumber, balance);
+        } else {
+            System.out.println("Invalid choice. Defaulting to Savings Account.");
+            return new SavAcct(customerName, accountNumber, balance);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Bank!");
+
+        Account account = createAccount();
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\nChoose an operation:");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Display Balance");
+            System.out.println("4. Compute and Deposit Interest (only for Savings Account)");
+            System.out.println("5. Issue Cheque Book (only for Current Account)");
+            System.out.println("6. Exit");
+
+            int option = scanner.nextInt();
+            scanner.nextLine(); // consume newline character
+
+            switch (option) {
+                case 1:
+                    System.out.print("Enter amount to deposit: ");
+                    double depositAmount = scanner.nextDouble();
+                    account.deposit(depositAmount);
+                    break;
+
+                case 2:
+                    System.out.print("Enter amount to withdraw: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    account.withdraw(withdrawAmount);
+                    break;
+
+                case 3:
+                    account.displayBalance();
+                    break;
+
+                case 4:
+                    if (account instanceof SavAcct) {
+                        ((SavAcct) account).computeAndDepositInterest();
+                    } else {
+                        System.out.println("Interest can only be calculated for Savings Account.");
+                    }
+                    break;
+
+                case 5:
+                    if (account instanceof CurAcct) {
+                        ((CurAcct) account).issueChequeBook();
+                    } else {
+                        System.out.println("Cheque Book can only be issued for Current Account.");
+                    }
+                    break;
+
+                case 6:
+                    exit = true;
+                    System.out.println("Thank you for using our bank services.");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
+        scanner.close();
+    }
+}

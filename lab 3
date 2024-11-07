@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 class Book {
-    // Four members of the Book class
+
     private String name;
     private String author;
     private double price;

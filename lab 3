@@ -1,0 +1,167 @@
+import java.util.Scanner;
+
+class Book {
+    // Four members of the Book class
+    private String name;
+    private String author;
+    private double price;
+    private int numPages;
+
+    public Book(String name, String author, double price, int numPages) {
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.numPages = numPages;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setNumPages(int numPages) {
+        this.numPages = numPages;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getNumPages() {
+        return numPages;
+    }
+
+    @Override
+    public String toString() {
+        return "Book Name: " + name + "\nAuthor: " + author + "\nPrice: " + price + "\nNumber of Pages: " + numPages;
+    }
+}
+
+public class BookStore {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n;
+        
+        System.out.print("Enter the number of books you want to create: ");
+        n = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
+
+        Book[] books = new Book[n];  // Array to hold multiple Book objects
+
+        int count = 0;  // Counter for the books created
+
+        while (true) {
+            System.out.println("\n--- Book Store Menu ---");
+            System.out.println("1. Create a Book");
+            System.out.println("2. Set Book Details");
+            System.out.println("3. Get Book Details");
+            System.out.println("4. Display All Books");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    if (count < n) {
+                        // Create a new book object with user input
+                        System.out.print("Enter Book Name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter Author Name: ");
+                        String author = scanner.nextLine();
+                        System.out.print("Enter Book Price: ");
+                        double price = scanner.nextDouble();
+                        System.out.print("Enter Number of Pages: ");
+                        int numPages = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline character
+
+                        // Create the Book object and store it in the array
+                        books[count] = new Book(name, author, price, numPages);
+                        count++; // Increment the counter after creating the book
+                        System.out.println("Book created successfully!");
+                    } else {
+                        System.out.println("You have already created the maximum number of books.");
+                    }
+                    break;
+
+                case 2:
+                    // Set details for a specific book
+                    System.out.print("Enter the book index (0 to " + (n - 1) + "): ");
+                    int index = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline character
+
+                    if (index >= 0 && index < n && books[index] != null) {
+                        System.out.print("Enter new Book Name: ");
+                        String newName = scanner.nextLine();
+                        System.out.print("Enter new Author Name: ");
+                        String newAuthor = scanner.nextLine();
+                        System.out.print("Enter new Price: ");
+                        double newPrice = scanner.nextDouble();
+                        System.out.print("Enter new Number of Pages: ");
+                        int newNumPages = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline character
+
+                        books[index].setName(newName);
+                        books[index].setAuthor(newAuthor);
+                        books[index].setPrice(newPrice);
+                        books[index].setNumPages(newNumPages);
+                        System.out.println("Book details updated successfully!");
+                    } else {
+                        System.out.println("Invalid book index or no book created at this index.");
+                    }
+                    break;
+
+                case 3:
+           
+                    System.out.print("Enter the book index (0 to " + (n - 1) + "): ");
+                    index = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline character
+
+                    if (index >= 0 && index < n && books[index] != null) {
+                        System.out.println("Book details:\n" + books[index].toString());
+                    } else {
+                        System.out.println("Invalid book index or no book created at this index.");
+                    }
+                    break;
+
+                case 4:
+                 
+                    System.out.println("\n--- All Books ---");
+                    for (int i = 0; i < n; i++) {
+                        if (books[i] != null) {
+                            System.out.println("\nBook " + (i + 1) + ":");
+                            System.out.println(books[i].toString());
+                        } else {
+                            System.out.println("No details for Book " + (i + 1) + " yet.");
+                        }
+                    }
+                    break;
+
+                case 5:
+               
+                    System.out.println("Exiting the program.");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}

@@ -1,0 +1,104 @@
+import java.util.Scanner;
+
+abstract class Shape {
+ 
+    int dimension1, dimension2;
+
+    abstract void printArea();
+}
+
+class Rectangle extends Shape {
+
+    public Rectangle(int length, int breadth) {
+        this.dimension1 = length;
+        this.dimension2 = breadth;
+    }
+    @Override
+    void printArea() {
+        int area = dimension1 * dimension2;
+        System.out.println("Area of Rectangle: " + area);
+    }
+}
+
+
+class Triangle extends Shape {
+    
+    public Triangle(int base, int height) {
+        this.dimension1 = base;
+        this.dimension2 = height;
+    }
+
+    @Override
+    void printArea() {
+        double area = 0.5 * dimension1 * dimension2;
+        System.out.println("Area of Triangle: " + area);
+    }
+}
+class Circle extends Shape {
+    
+    public Circle(int radius) {
+        this.dimension1 = radius;
+        this.dimension2 = 0; // No second dimension for circle
+    }
+
+   
+    @Override
+    void printArea() {
+        double area = Math.PI * dimension1 * dimension1;
+        System.out.println("Area of Circle: " + area);
+    }
+}
+
+public class ShapeAreaCalculator {
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Shape Area Calculator ---");
+            System.out.println("1. Rectangle");
+            System.out.println("2. Triangle");
+            System.out.println("3. Circle");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            Shape shape = null;
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter length of rectangle: ");
+                    int length = scanner.nextInt();
+                    System.out.print("Enter breadth of rectangle: ");
+                    int breadth = scanner.nextInt();
+                    shape = new Rectangle(length, breadth);
+                    shape.printArea();
+                    break;
+
+                case 2:
+                    System.out.print("Enter base of triangle: ");
+                    int base = scanner.nextInt();
+                    System.out.print("Enter height of triangle: ");
+                    int height = scanner.nextInt();
+                    shape = new Triangle(base, height);
+                    shape.printArea();
+                    break;
+
+                case 3:
+                    System.out.print("Enter radius of circle: ");
+                    int radius = scanner.nextInt();
+                    shape = new Circle(radius);
+                    shape.printArea();
+                    break;
+
+                case 4:
+                    System.out.println("Exiting the program.");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
